@@ -9,15 +9,16 @@ document.addEventListener("DOMContentLoaded", function () {
             const response = await fetch("https://api.adviceslip.com/advice");
             const data = await response.json();
 
-            quoteElement.textContent = `"${data.content}"`;
-            authorElement.textContent = `- ${data.author}`;
+            // Ajuste según la nueva API
+            quoteElement.textContent = `"${data.slip.advice}"`;
+            authorElement.textContent = "- Consejo";
 
             // Guardar última frase
-            localStorage.setItem("ultimaQuote", data.content);
-            localStorage.setItem("ultimoAutor", data.author);
+            localStorage.setItem("ultimaQuote", data.slip.advice);
+            localStorage.setItem("ultimoAutor", "Consejo");
 
         } catch (error) {
-
+            // Offline o error
             const ultimaQuote = localStorage.getItem("ultimaQuote");
             const ultimoAutor = localStorage.getItem("ultimoAutor");
 
@@ -28,20 +29,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 quoteElement.textContent = "No hay conexión a internet";
                 authorElement.textContent = "";
             }
+
+            console.log("Error:", error);
         }
     }
 
     button.addEventListener("click", obtenerFrase);
 
+    // Cargar primera frase al inicio
     obtenerFrase();
 });
-
-
-
-// Registrar service worker
-if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("service-worker.js")
-        .then(() => console.log("Service Worker registrado"))
-        .catch(err => console.log("Error al registrar SW:", err));
-}
-
