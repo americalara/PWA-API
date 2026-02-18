@@ -3,7 +3,7 @@ const CACHE_NAME = "frases-cache-v2";
 const urlsToCache = [
     "./",
     "./index.html",
-    "./script.js",
+    "./app.js",
     "./manifest.json"
 ];
 
