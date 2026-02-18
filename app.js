@@ -6,19 +6,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
     async function obtenerFrase() {
         try {
+            // 🔹 URL con timestamp para evitar cache
             const response = await fetch(`https://api.adviceslip.com/advice?timestamp=${Date.now()}`);
             const data = await response.json();
 
-            // Ajuste según la nueva API
             quoteElement.textContent = `"${data.slip.advice}"`;
             authorElement.textContent = "- Consejo";
 
-            // Guardar última frase
             localStorage.setItem("ultimaQuote", data.slip.advice);
             localStorage.setItem("ultimoAutor", "Consejo");
 
         } catch (error) {
-            // Offline o error
             const ultimaQuote = localStorage.getItem("ultimaQuote");
             const ultimoAutor = localStorage.getItem("ultimoAutor");
 
@@ -36,6 +34,5 @@ document.addEventListener("DOMContentLoaded", function () {
 
     button.addEventListener("click", obtenerFrase);
 
-    // Cargar primera frase al inicio
-    obtenerFrase();
+    obtenerFrase(); // cargar la primera frase
 });
