@@ -2,30 +2,44 @@ const fraseElemento = document.getElementById("frase");
 const boton = document.getElementById("btnNueva");
 
 async function obtenerFrase() {
+
+    fraseElemento.textContent = "Cargando frase...";
+
     try {
         const response = await fetch("https://api.quotable.io/random");
 
+        // 🔎 Validar status HTTP
         if (!response.ok) {
-            throw new Error("Error en la respuesta");
+            fraseElemento.textContent = "Error HTTP: " + response.status;
+            return;
         }
 
         const data = await response.json();
 
+        // 🔎 Validar estructura del JSON
+        if (!data || !data.content) {
+            fraseElemento.textContent = "Error: JSON inválido";
+            return;
+        }
+
         fraseElemento.textContent = data.content;
 
-        // Guardar última frase para modo offline
+        // Guardar última frase
         localStorage.setItem("ultimaFrase", data.content);
 
     } catch (error) {
-        console.log("Error real:", error);
 
-        const fraseGuardada = localStorage.getItem("ultimaFrase");
-
-        if (fraseGuardada) {
-            fraseElemento.textContent = fraseGuardada + " (Offline)";
-        } else {
-            fraseElemento.textContent = "No se pudo cargar la frase.";
+        if (!navigator.onLine) {
+            fraseElemento.textContent = "Sin conexión a internet";
+        } 
+        else if (error.name === "TypeError") {
+            fraseElemento.textContent = "Error de red o CORS";
+        } 
+        else {
+            fraseElemento.textContent = "Error desconocido: " + error.message;
         }
+
+        console.log("Error real:", error);
     }
 }
 
@@ -42,3 +56,4 @@ if ("serviceWorker" in navigator) {
         .then(() => console.log("Service Worker registrado"))
         .catch(err => console.log("Error al registrar SW:", err));
 }
+
