@@ -1,4 +1,4 @@
-const CACHE_NAME = "frases-cache-v6"; // cambiar el número cada vez que se actualice algo
+const CACHE_NAME = "frases-cache-v7"; // cambiar el número cada vez que se actualice algo
 
 
 const urlsToCache = [
