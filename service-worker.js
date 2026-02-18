@@ -1,4 +1,4 @@
-const CACHE_NAME = "frases-cache-v2";
+const CACHE_NAME = "frases-cache-v3";
 
 const urlsToCache = [
     "./",
@@ -22,9 +22,7 @@ self.addEventListener("activate", event => {
         caches.keys().then(keys =>
             Promise.all(
                 keys.map(key => {
-                    if (key !== CACHE_NAME) {
-                        return caches.delete(key);
-                    }
+                    if (key !== CACHE_NAME) return caches.delete(key);
                 })
             )
         )
@@ -34,14 +32,11 @@ self.addEventListener("activate", event => {
 
 // FETCH
 self.addEventListener("fetch", event => {
+    const url = event.request.url;
 
-    // 🔹 Si es la API, pasar directo a internet
-    if (event.request.url.includes("api.quotable.io")) {
-        event.respondWith(fetch(event.request));
-        return;
-    }
+    // 🔹 Solo cachear archivos locales (tu dominio)
+    if (!url.startsWith(self.location.origin)) return;
 
-    // 🔹 Para todos los demás archivos cacheados
     event.respondWith(
         caches.match(event.request).then(response => response || fetch(event.request))
     );
