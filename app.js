@@ -1,39 +1,41 @@
-const fraseElemento = document.getElementById("frase");
-const boton = document.getElementById("btnNueva");
+document.addEventListener("DOMContentLoaded", function () {
 
-async function obtenerFrase() {
-    try {
-        const response = await fetch("https://api.quotable.io/random");
+    const quoteElement = document.getElementById("quote");
+    const authorElement = document.getElementById("author");
+    const button = document.getElementById("newQuoteBtn");
 
-        if (!response.ok) {
-            throw new Error("Error en la respuesta");
-        }
+    async function obtenerFrase() {
+        try {
+            const response = await fetch("https://api.quotable.io/random");
+            const data = await response.json();
 
-        const data = await response.json();
+            quoteElement.textContent = `"${data.content}"`;
+            authorElement.textContent = `- ${data.author}`;
 
-        fraseElemento.textContent = data.content;
+            // Guardar última frase
+            localStorage.setItem("ultimaQuote", data.content);
+            localStorage.setItem("ultimoAutor", data.author);
 
-        // Guardar última frase para modo offline
-        localStorage.setItem("ultimaFrase", data.content);
+        } catch (error) {
 
-    } catch (error) {
-        console.log("Error real:", error);
+            const ultimaQuote = localStorage.getItem("ultimaQuote");
+            const ultimoAutor = localStorage.getItem("ultimoAutor");
 
-        const fraseGuardada = localStorage.getItem("ultimaFrase");
-
-        if (fraseGuardada) {
-            fraseElemento.textContent = fraseGuardada + " (Offline)";
-        } else {
-            fraseElemento.textContent = "No se pudo cargar la frase.";
+            if (ultimaQuote && ultimoAutor) {
+                quoteElement.textContent = `"${ultimaQuote}"`;
+                authorElement.textContent = `- ${ultimoAutor}`;
+            } else {
+                quoteElement.textContent = "No hay conexión a internet";
+                authorElement.textContent = "";
+            }
         }
     }
-}
 
-// Evento del botón
-boton.addEventListener("click", obtenerFrase);
+    button.addEventListener("click", obtenerFrase);
 
-// Cargar frase al iniciar
-obtenerFrase();
+    obtenerFrase();
+});
+
 
 
 // Registrar service worker
