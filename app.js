@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     async function obtenerFrase() {
         try {
-            const response = await fetch("https://type.fit/api/quotes");
+            const response = await fetch("https://api.adviceslip.com/advice");
             const data = await response.json();
 
             quoteElement.textContent = `"${data.content}"`;
