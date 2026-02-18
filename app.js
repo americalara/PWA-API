@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     async function obtenerFrase() {
         try {
-            const response = await fetch("https://api.adviceslip.com/advice");
+            const response = await fetch(`https://api.adviceslip.com/advice?timestamp=${Date.now()}`);
             const data = await response.json();
 
             // Ajuste según la nueva API
